@@ -25,10 +25,13 @@ fun Application.configureSerialization(
             post("/registration") {
                 val user = call.receive<User>()
 
-                val token = tokenRepository.addToken(email = user.email)
-                userRepository.addUser(user)
-
-                call.respond(token)
+                val isUserCreated = userRepository.addUser(user)
+                if(isUserCreated) {
+                    val token = tokenRepository.addToken(email = user.email)
+                    call.respond(token)
+                } else {
+                    call.respond(HttpStatusCode.Conflict, "Пользователь с таким Email уже существует.")
+                }
             }
 
             post("/login") {
