@@ -16,7 +16,7 @@ class UserRepositoryImpl : UserRepository {
                 password = user.password
             }
             true
-        } catch (e: PSQLException) {
+        } catch (e: Exception) {
             false
         }
     }
