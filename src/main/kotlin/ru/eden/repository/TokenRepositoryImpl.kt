@@ -8,12 +8,12 @@ import ru.eden.suspendTransaction
 import java.util.UUID
 
 class TokenRepositoryImpl : TokenRepository {
-    override suspend fun tokenByEmail(email: String): Token? = suspendTransaction {
+    override suspend fun tokenByEmail(email: String): Token = suspendTransaction {
         TokenDAO
             .find { (TokenTable.email eq email) }
             .limit(1)
             .map(::daoToModel)
-            .firstOrNull()
+            .first()
     }
 
     override suspend fun addToken(email: String): Token = suspendTransaction {
