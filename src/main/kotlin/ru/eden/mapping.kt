@@ -4,9 +4,11 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import ru.eden.database.dao.DishDAO
+import ru.eden.database.dao.OrderDAO
 import ru.eden.database.dao.TokenDAO
 import ru.eden.database.dao.UserDAO
 import ru.eden.model.Dish
+import ru.eden.model.Order
 import ru.eden.model.Token
 import ru.eden.model.User
 
@@ -33,3 +35,10 @@ fun daoToModel(dao: DishDAO) = Dish(
     price = dao.price,
     isAvailable = dao.isAvailable,
 )
+
+fun daoToModel(dao: OrderDAO) = Order(
+    address = dao.address,
+    dishesPrice = dao.dishesPrice,
+    totalPrice = dao.totalPrice
+)
+

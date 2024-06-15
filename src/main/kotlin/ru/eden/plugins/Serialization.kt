@@ -75,7 +75,7 @@ fun Application.configureSerialization(
                 val order = suspendTransaction {
                     OrderDAO.all().last()
                 }
-                call.respond(order)
+                call.respond(daoToModel(order))
             }
             post("/create") {
                 val order = call.receive<Order>()
