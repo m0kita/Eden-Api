@@ -10,12 +10,14 @@ import io.ktor.server.routing.*
 import ru.eden.daoToModel
 import ru.eden.model.LoginData
 import ru.eden.model.User
+import ru.eden.repository.DishRepository
 import ru.eden.repository.TokenRepository
 import ru.eden.repository.UserRepository
 
 fun Application.configureSerialization(
     userRepository: UserRepository,
     tokenRepository: TokenRepository,
+    dishRepository: DishRepository
 ) {
     install(ContentNegotiation) {
         json()
@@ -48,6 +50,21 @@ fun Application.configureSerialization(
                 } else {
                     call.respond(HttpStatusCode.BadRequest, "Пользователь не найден.")
                 }
+            }
+        }
+        route("/dishes") {
+            get {
+                val type: Int = call.request.queryParameters["type"]?.toInt() ?: 1
+
+                val dishes = dishRepository.dishesByType(type)
+                call.respond(dishes)
+            }
+
+            get("/dishesById") {
+                val ids = call.receive<List<Int>>()
+
+                val dishes = dishRepository.dishesById(ids)
+                call.respond(dishes)
             }
         }
     }
