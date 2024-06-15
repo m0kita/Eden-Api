@@ -25,6 +25,7 @@ fun daoToModel(dao: TokenDAO) = Token(
 )
 
 fun daoToModel(dao: DishDAO) = Dish(
+    id = dao.id.value,
     type = dao.type,
     imageURL = dao.imageURL,
     name = dao.name,
