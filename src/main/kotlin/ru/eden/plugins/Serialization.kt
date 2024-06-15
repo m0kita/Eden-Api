@@ -60,7 +60,7 @@ fun Application.configureSerialization(
                 call.respond(dishes)
             }
 
-            get("/dishesById") {
+            post("/dishesById") {
                 val ids = call.receive<List<Int>>()
 
                 val dishes = dishRepository.dishesById(ids)
