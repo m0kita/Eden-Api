@@ -8,11 +8,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.eden.daoToModel
+import ru.eden.database.dao.OrderDAO
 import ru.eden.model.LoginData
+import ru.eden.model.Order
 import ru.eden.model.User
 import ru.eden.repository.DishRepository
 import ru.eden.repository.TokenRepository
 import ru.eden.repository.UserRepository
+import ru.eden.suspendTransaction
 
 fun Application.configureSerialization(
     userRepository: UserRepository,
@@ -65,6 +68,25 @@ fun Application.configureSerialization(
 
                 val dishes = dishRepository.dishesById(ids)
                 call.respond(dishes)
+            }
+        }
+        route("/order") {
+            get {
+                val order = suspendTransaction {
+                    OrderDAO.all().last()
+                }
+                call.respond(order)
+            }
+            post("/create") {
+                val order = call.receive<Order>()
+                val newOrder = suspendTransaction {
+                    return@suspendTransaction OrderDAO.new {
+                        address = order.address
+                        dishesPrice = order.dishesPrice
+                        totalPrice = order.totalPrice
+                    }
+                }
+                call.respond(newOrder.address.isNotEmpty())
             }
         }
     }
